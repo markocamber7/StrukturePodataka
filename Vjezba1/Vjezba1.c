@@ -11,61 +11,76 @@ typedef struct {
     int points;
 } Student;
 
-int main() {
-    
-    int studentCount = 0;
-    char temp[100];   // Pomoćni buffer za brojanje redaka
-    Student* students;
+// Funkcija za brojanje studenata u datoteci
+int countStudents(FILE* fp) {
+    char temp[100];
+    int count = 0;
 
-    // Otvaranje datoteke 
+    while (fgets(temp, sizeof(temp), fp) != NULL) {
+        count++;
+    }
+    rewind(fp);  // Vraćamo pokazivač na početak datoteke
+    return count;
+}
+
+// Funkcija za učitavanje studenata
+Student* loadStudents(FILE* fp, int studentCount) {
+    Student* students = (Student*)malloc(studentCount * sizeof(Student));
+    if (students == NULL) {
+        printf("Greska pri alokaciji memorije!\n");
+        return NULL;
+    }
+
+    for (int i = 0; i < studentCount; i++) {
+        fscanf(fp, "%s %s %d", students[i].name, students[i].surname, &students[i].points);
+    }
+
+    return students;
+}
+
+// Funkcija za računanje relativnih bodova
+float calculateRelativePoints(int points) {
+    return ((float)points / MAX_POINTS) * 100;
+}
+
+// Funkcija za ispis tablice studenata
+void printStudents(Student* students, int studentCount) {
+    printf("IME\t\tPREZIME\t\tAPS BOD\t\tREL BOD (%%)\n");
+    for (int i = 0; i < studentCount; i++) {
+        float relative = calculateRelativePoints(students[i].points);
+        printf("%s\t\t%s\t\t%d\t\t%.2f\n",
+            students[i].name, students[i].surname,
+            students[i].points, relative);
+    }
+}
+
+int main() {
     FILE* fp = fopen("students.txt", "r");
     if (fp == NULL) {
         printf("Greska pri otvaranju datoteke!\n");
         return 1;
     }
 
-    // Brojimo koliko ima redaka (tj. koliko ima studenata)
-    while (fgets(temp, sizeof(temp), fp) != NULL) {
-        studentCount++;
-    }
-
-    // Ako je datoteka prazna - prekid programa
+    // 1. Brojanje studenata
+    int studentCount = countStudents(fp);
     if (studentCount == 0) {
         printf("Datoteka je prazna.\n");
         fclose(fp);
         return 0;
     }
 
-    // Vraćamo pokazivač na početak datoteke (da možemo ponovo čitati)
-    rewind(fp);
-
-    // Dinamička alokacija memorije za sve studente
-    students = (Student*)malloc(studentCount * sizeof(Student));
-    if (students == NULL) {
-        printf("Greska pri alokaciji memorije!\n");
-        fclose(fp);
-        return 1;
-    }
-
-    // Učitavanje podataka iz datoteke
-    for (int i = 0; i < studentCount; i++) {
-        fscanf(fp, "%s %s %d", students[i].name, students[i].surname, &students[i].points);
-    }
-
-    // Zatvaramo datoteku 
+    // 2. Učitavanje studenata
+    Student* students = loadStudents(fp, studentCount);
     fclose(fp);
 
-    // Ispis podataka o studentima
-    printf("IME\t\tPREZIME\t\tAPS BOD\t\tREL BOD (%%)\n");
-    for (int i = 0; i < studentCount; i++) {
-        // Izračun relativnih bodova u postocima
-        float relative = ((float)students[i].points / MAX_POINTS) * 100;
-        printf("%s\t\t%s\t\t%d\t\t%.2f\n",
-            students[i].name, students[i].surname,
-            students[i].points, relative);
+    if (students == NULL) {
+        return 1; // Greska pri alokaciji
     }
 
-    // Oslobađanje memorije jer nam više ne treba
+    // 3. Ispis
+    printStudents(students, studentCount);
+
+    // 4. Oslobađanje memorije
     free(students);
 
     return 0;
