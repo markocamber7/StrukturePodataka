@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\marko\\Desktop\\StrukturePodataka\\Vjezba2\\Vjezba2.c\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B29D957C-524E-40F0-95D2-CA67AFC0E205}|Vjezba2.c\\Vjezba2.c.vcxproj|C:\\Users\\marko\\Desktop\\StrukturePodataka\\Vjezba2\\Vjezba2.c\\Vjezba2.c\\Vjezba2.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{B29D957C-524E-40F0-95D2-CA67AFC0E205}|Vjezba2.c\\Vjezba2.c.vcxproj|solutionrelative:Vjezba2.c\\Vjezba2.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Vjezba2.c",
+              "DocumentMoniker": "C:\\Users\\marko\\Desktop\\StrukturePodataka\\Vjezba2\\Vjezba2.c\\Vjezba2.c\\Vjezba2.c",
+              "RelativeDocumentMoniker": "Vjezba2.c\\Vjezba2.c",
+              "ToolTip": "C:\\Users\\marko\\Desktop\\StrukturePodataka\\Vjezba2\\Vjezba2.c\\Vjezba2.c\\Vjezba2.c",
+              "RelativeToolTip": "Vjezba2.c\\Vjezba2.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-10-22T15:34:44.924Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
