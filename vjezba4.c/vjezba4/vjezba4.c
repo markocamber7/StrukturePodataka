@@ -1,110 +1,146 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include <stdlib.h> 
+#include <stdlib.h>
 
-// struktura za jedan ?lan polinoma
-typedef struct {
-    int coef; // koeficijent
-    int exp;  // eksponent
-} Pol;
+typedef struct Node {
+    int coef;
+    int exp;
+    struct Node *next;
+} Node;
 
 // deklaracije funkcija
-int readPolynomial(FILE *f, Pol p[]);
-int addPolynomials(Pol p1[], int n1, Pol p2[], int n2, Pol result[]);
-int multiplyPolynomials(Pol p1[], int n1, Pol p2[], int n2, Pol result[]);
-int printPolynomial(Pol p[], int n);
+Node *readPolynomial(FILE *f);
+Node *addPolynomials(Node *p1, Node *p2);
+Node *multiplyPolynomials(Node *p1, Node *p2);
+void printPolynomial(Node *p);
+void insertSorted(Node **head, int coef, int exp);
+void freeList(Node *p);
 
 int main() {
     FILE *f = fopen("polinomi.txt", "r");
     if (!f) {
         printf("Greska pri otvaranju datoteke!\n");
-        exit(1); // odmah prekid programa
+        exit(1);
     }
 
-    Pol p1[20], p2[20], sum[40], product[40];
-
-    // ?itanje dva polinoma iz datoteke
-    int n1 = readPolynomial(f, p1);
-    int n2 = readPolynomial(f, p2);
+    Node *p1 = readPolynomial(f);
+    Node *p2 = readPolynomial(f);
     fclose(f);
 
-    // ra?unanje zbroja i umno�ka
-    int ns = addPolynomials(p1, n1, p2, n2, sum);
-    int np = multiplyPolynomials(p1, n1, p2, n2, product);
+    Node *sum = addPolynomials(p1, p2);
+    Node *product = multiplyPolynomials(p1, p2);
 
-    // ispis rezultata
     printf("Prvi polinom: ");
-    printPolynomial(p1, n1);
+    printPolynomial(p1);
     printf("Drugi polinom: ");
-    printPolynomial(p2, n2);
+    printPolynomial(p2);
     printf("Zbroj: ");
-    printPolynomial(sum, ns);
+    printPolynomial(sum);
     printf("Umnozak: ");
-    printPolynomial(product, np);
+    printPolynomial(product);
+
+    // oslobađanje memorije
+    freeList(p1);
+    freeList(p2);
+    freeList(sum);
+    freeList(product);
 
     return 0;
 }
 
-// ?ita jedan polinom iz datoteke
-int readPolynomial(FILE *f, Pol p[]) {
-    int n = 0;
-    while (fscanf(f, "%d %d", &p[n].coef, &p[n].exp) == 2) {
-        n++;
-        if (fgetc(f) == '\n') break; // kraj reda = novi polinom
-    }
-    return n;
-}
+// funkcija za umetanje člana u sortiranu listu (po eksponentu, opadajuće)
+void insertSorted(Node **head, int coef, int exp) {
+    if (coef == 0) return;
+    Node *newNode = (Node *)malloc(sizeof(Node));
+    newNode->coef = coef;
+    newNode->exp = exp;
+    newNode->next = NULL;
 
-// zbraja dva polinoma
-int addPolynomials(Pol p1[], int n1, Pol p2[], int n2, Pol result[]) {
-    int nr = 0;
-    for (int i = 0; i < n1; i++) {
-        result[nr++] = p1[i];
+    // prazna lista ili najveći eksponent
+    if (*head == NULL || (*head)->exp < exp) {
+        newNode->next = *head;
+        *head = newNode;
+        return;
     }
-    for (int i = 0; i < n2; i++) {
-        int found = 0;
-        for (int j = 0; j < nr; j++) {
-            if (result[j].exp == p2[i].exp) {
-                result[j].coef += p2[i].coef;
-                found = 1;
-            }
+
+    Node *curr = *head, *prev = NULL;
+    while (curr && curr->exp > exp) {
+        prev = curr;
+        curr = curr->next;
+    }
+
+    if (curr && curr->exp == exp) {
+        curr->coef += coef;
+        free(newNode);
+        if (curr->coef == 0) { // izbaci ako je 0
+            if (prev) prev->next = curr->next;
+            else *head = curr->next;
+            free(curr);
         }
-        if (!found) result[nr++] = p2[i];
+    } else {
+        newNode->next = curr;
+        if (prev) prev->next = newNode;
+        else *head = newNode;
     }
-    return nr;
 }
 
-// mno�i dva polinoma
-int multiplyPolynomials(Pol p1[], int n1, Pol p2[], int n2, Pol result[]) {
-    int nr = 0;
-    for (int i = 0; i < n1; i++) {
-        for (int j = 0; j < n2; j++) {
-            int c = p1[i].coef * p2[j].coef; // novi koeficijent
-            int e = p1[i].exp + p2[j].exp;   // novi eksponent
-            int found = 0;
-            for (int t = 0; t < nr; t++) {
-                if (result[t].exp == e) {
-                    result[t].coef += c;
-                    found = 1;
-                }
-            }
-            if (!found) {
-                result[nr].coef = c;
-                result[nr].exp = e;
-                nr++;
-            }
+// čitanje polinoma iz datoteke
+Node *readPolynomial(FILE *f) {
+    Node *head = NULL;
+    int c, e;
+    char ch;
+    while (fscanf(f, "%d %d", &c, &e) == 2) {
+        insertSorted(&head, c, e);
+        ch = fgetc(f);
+        if (ch == '\n' || ch == EOF) break;
+        else ungetc(ch, f);
+    }
+    return head;
+}
+
+// zbrajanje polinoma
+Node *addPolynomials(Node *p1, Node *p2) {
+    Node *result = NULL;
+    while (p1) {
+        insertSorted(&result, p1->coef, p1->exp);
+        p1 = p1->next;
+    }
+    while (p2) {
+        insertSorted(&result, p2->coef, p2->exp);
+        p2 = p2->next;
+    }
+    return result;
+}
+
+// množenje polinoma
+Node *multiplyPolynomials(Node *p1, Node *p2) {
+    Node *result = NULL;
+    for (Node *a = p1; a != NULL; a = a->next) {
+        for (Node *b = p2; b != NULL; b = b->next) {
+            insertSorted(&result, a->coef * b->coef, a->exp + b->exp);
         }
     }
-    return nr;
+    return result;
 }
 
-// ispisuje polinom
-int printPolynomial(Pol p[], int n) {
-    for (int i = 0; i < n; i++) {
-        printf("%+dx^%d ", p[i].coef, p[i].exp);
+// ispis polinoma
+void printPolynomial(Node *p) {
+    if (!p) {
+        printf("0\n");
+        return;
+    }
+    while (p) {
+        printf("%+dx^%d ", p->coef, p->exp);
+        p = p->next;
     }
     printf("\n");
-    return 0;
 }
 
-
+// oslobađa listu iz memorije
+void freeList(Node *p) {
+    while (p) {
+        Node *tmp = p;
+        p = p->next;
+        free(tmp);
+    }
+}
