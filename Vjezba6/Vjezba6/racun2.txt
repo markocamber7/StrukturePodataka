@@ -1,0 +1,5 @@
+2025-02-03
+Televizor,1,499.90
+Kruh,3,1.10
+Sarafi,20,0.10
+LaptopTorba,1,24.99
