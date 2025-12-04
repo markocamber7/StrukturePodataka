@@ -17,6 +17,62 @@ typedef struct Bill {
     struct Bill* next;  
 } Bill;
 
+int addBillSorted(Bill** head, const char* date);
+int addItemSorted(Item** head, const char* name, int qty, float price);
+int loadBill(Bill** head, const char* filename);
+int loadAll(Bill** head);
+int printBill(Bill* head);
+int searchRange(Bill* head, const char* name, const char* from, const char* to);
+int summary(Bill* head);
+int freeAll(Bill* head);
+
+int main() {
+    Bill* bills = NULL;
+
+    // učitamo sve račune iz datoteka
+    if (loadAll(&bills) != 0) {
+        printf("Greska pri ucitavanju.\n");
+        return 1;
+    }
+
+    int ch;
+    char name[50];
+    char from[20], to[20];
+
+    do {
+        printf("\n1 - Ispis racuna\n");
+        printf("2 - Pretraga artikla\n");
+        printf("3 - Obracun svih racuna\n");
+        printf("0 - Kraj\n");
+        printf("Izbor: ");
+        scanf("%d", &ch);
+
+        if (ch == 1)
+            printBill(bills);
+
+        else if (ch == 2) {
+            printf("Unesi artikl: ");
+            scanf("%49s", name);
+
+            printf("Od datuma (YYYY-MM-DD): ");
+            scanf("%19s", from);
+
+            printf("Do datuma (YYYY-MM-DD): ");
+            scanf("%19s", to);
+
+            searchRange(bills, name, from, to);
+        }
+
+        else if (ch == 3)
+            summary(bills);
+
+    } while (ch != 0);
+
+    freeAll(bills);
+    return 0;
+}
+
+
 
 
 int addBillSorted(Bill** head, const char* date) {
@@ -242,49 +298,3 @@ int freeAll(Bill* head) {
     return 0;
 }
 
-
-int main() {
-    Bill* bills = NULL;
-
-    // učitamo sve račune iz datoteka
-    if (loadAll(&bills) != 0) {
-        printf("Greska pri ucitavanju.\n");
-        return 1;
-    }
-
-    int ch;
-    char name[50];
-    char from[20], to[20];
-
-    do {
-        printf("\n1 - Ispis racuna\n");
-        printf("2 - Pretraga artikla\n");
-        printf("3 - Obracun svih racuna\n");
-        printf("0 - Kraj\n");
-        printf("Izbor: ");
-        scanf("%d", &ch);
-
-        if (ch == 1)
-            printBill(bills);
-
-        else if (ch == 2) {
-            printf("Unesi artikl: ");
-            scanf("%49s", name);
-
-            printf("Od datuma (YYYY-MM-DD): ");
-            scanf("%19s", from);
-
-            printf("Do datuma (YYYY-MM-DD): ");
-            scanf("%19s", to);
-
-            searchRange(bills, name, from, to);
-        }
-
-        else if (ch == 3)
-            summary(bills);
-
-    } while (ch != 0);
-
-    freeAll(bills);
-    return 0;
-}
