@@ -25,7 +25,7 @@ Dir* createDir(char* name, Dir* parent) {
 }
 
 
-void makeDir(Dir* current) {
+int makeDir(Dir* current) {
     char name[50];
     printf("Ime direktorija: ");
     scanf("%s", name);
@@ -41,6 +41,7 @@ void makeDir(Dir* current) {
             t = t->sibling;
         t->sibling = newDir;
     }
+    return 0;
 }
 
 
@@ -61,7 +62,7 @@ Dir* changeDir(Dir* current) {
 }
 
 
-void listDir(Dir* current) {
+int listDir(Dir* current) {
     Dir* t = current->child;
     if (!t) {
         printf("Direktorij je prazan.\n");
@@ -72,6 +73,7 @@ void listDir(Dir* current) {
         printf("%s\n", t->name);
         t = t->sibling;
     }
+    return 0;
 }
 
 
