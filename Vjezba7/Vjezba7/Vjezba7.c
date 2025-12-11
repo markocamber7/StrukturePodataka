@@ -66,7 +66,7 @@ int listDir(Dir* current) {
     Dir* t = current->child;
     if (!t) {
         printf("Direktorij je prazan.\n");
-        return;
+        return -1;
     }
 
     while (t) {
