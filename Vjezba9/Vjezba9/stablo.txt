@@ -1,0 +1,4 @@
+Inorder nakon insert funkcije:
+22 33 35 47 51 73 73 80 82 83 
+Inorder nakon replace funkcije:
+33 0 153 0 47 506 80 0 236 0 

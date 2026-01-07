@@ -1,0 +1,5 @@
+﻿  Vjezba9.c
+C:\Users\marko\Desktop\StrukturePodataka\Vjezba2\Vjezba2.c\Vjezba9\Vjezba9\Vjezba9.c(29,11): warning C4244: 'function': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\marko\Desktop\StrukturePodataka\Vjezba2\Vjezba2.c\Vjezba9\Vjezba9\Vjezba9.c(87,9): warning C4033: 'inorder' must return a value
+C:\Users\marko\Desktop\StrukturePodataka\Vjezba2\Vjezba2.c\Vjezba9\Vjezba9\Vjezba9.c(94,1): warning C4715: 'inorder': not all control paths return a value
+  Vjezba9.vcxproj -> C:\Users\marko\Desktop\StrukturePodataka\Vjezba2\Vjezba2.c\Vjezba9\x64\Debug\Vjezba9.exe
