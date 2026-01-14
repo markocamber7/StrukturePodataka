@@ -1,0 +1,4 @@
+﻿  Vjezba11.c
+C:\Users\marko\Desktop\StrukturePodataka\Vjezba2\Vjezba2.c\Vjezba11\Vjezba11\Vjezba11.c(168,16): warning C4033: 'printCityTree' must return a value
+C:\Users\marko\Desktop\StrukturePodataka\Vjezba2\Vjezba2.c\Vjezba11\Vjezba11\Vjezba11.c(178,1): warning C4715: 'printCityTree': not all control paths return a value
+  Vjezba11.vcxproj -> C:\Users\marko\Desktop\StrukturePodataka\Vjezba2\Vjezba2.c\Vjezba11\x64\Debug\Vjezba11.exe
